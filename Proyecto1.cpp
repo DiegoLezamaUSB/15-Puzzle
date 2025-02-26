@@ -15,7 +15,7 @@ pair<int, int> getBlankPosition(const vector<int>& state) {
     return {index / 4, index % 4};
 }
 
-// Generar vecinos para un estado dado
+// Obtener los vecinos para un estado dado
 vector<vector<int>> getNeighbors(const vector<int>& state) {
     vector<vector<int>> neighbors;
     auto [blankRow, blankCol] = getBlankPosition(state);
@@ -98,7 +98,7 @@ int countLinearConflicts(const vector<int>& stateLine, const vector<int>& goalLi
     return conflict;
 }
 
-// Heurística de Distancia de Caminata (Walking Distance)
+// Heurística Walking Distance
 int walkingDistance(const vector<int>& state, const vector<int>& goal) {
     int distance = 0;
     // Suponemos que es similar a la distancia Manhattan para este ejemplo
@@ -154,10 +154,10 @@ vector<vector<int>> idaStar(const vector<int>& start, const vector<int>& goal) {
 // Función principal de ejemplo
 int main() {
     vector<int> start = {
-        1, 4, 2, 3,
-        11, 6, 7, 8,
-        9, 13, 5, 12,
-        0, 14, 15, 10
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 0
     };
     
     vector<int> goal = {
