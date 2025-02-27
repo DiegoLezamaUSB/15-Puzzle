@@ -11,6 +11,8 @@
 
 using namespace std;
 
+vector<vector<int>> precomputedDistances(16, vector<int>(16));
+
 // Custom function to convert vector<int> to a string
 string vectorToString(const vector<int>& vec) {
     ostringstream oss;
@@ -77,7 +79,19 @@ int manhattanDistance(const vector<int>& state, const vector<int>& goal) {
     return distance;
 }
 
-int countLinearConflicts(const vector<int>& stateLine, const vector<int>& goalLine);
+int countLinearConflicts(const vector<int>& stateLine, const vector<int>& goalLine) {
+    int conflict = 0;
+    for (int i = 0; i < 4; ++i) {
+        if (stateLine[i] != 0 && stateLine[i] != goalLine[i]) {
+            for (int j = i + 1; j < 4; ++j) {
+                if (stateLine[j] != 0 && stateLine[j] != goalLine[j] && goalLine[i] == stateLine[j] && goalLine[j] == stateLine[i]) {
+                    conflict += 2;
+                }
+            }
+        }
+    }
+    return conflict;
+}
 
 // Heurística de Conflicto Lineal
 int linearConflict(const vector<int>& state, const vector<int>& goal) {
@@ -103,34 +117,28 @@ int linearConflict(const vector<int>& state, const vector<int>& goal) {
     return conflict;
 }
 
-int countLinearConflicts(const vector<int>& stateLine, const vector<int>& goalLine) {
-    int conflict = 0;
-    for (int i = 0; i < 4; ++i) {
-        if (stateLine[i] != 0 && stateLine[i] != goalLine[i]) {
-            for (int j = i + 1; j < 4; ++j) {
-                if (stateLine[j] != 0 && stateLine[j] != goalLine[j] && goalLine[i] == stateLine[j] && goalLine[j] == stateLine[i]) {
-                    conflict += 2;
-                }
-            }
+
+void precomputeDistances() {
+    for (int i = 0; i < 16; ++i) {
+        for (int j = 0; j < 16; ++j) {
+            precomputedDistances[i][j] = abs(i / 4 - j / 4) + abs(i % 4 - j % 4);
         }
     }
-    return conflict;
 }
 
 // Heurística Walking Distance
 int walkingDistance(const vector<int>& state, const vector<int>& goal) {
     int distance = 0;
-    // Suponemos que es similar a la distancia Manhattan para este ejemplo
     for (int i = 0; i < 16; ++i) {
         if (state[i] != 0) {
-            auto [goalRow, goalCol] = getPosition(goal, state[i]);
-            distance += abs(goalRow - i / 4) + abs(goalCol - i % 4);
+            int goalIndex = find(goal.begin(), goal.end(), state[i]) - goal.begin();
+            distance += precomputedDistances[i][goalIndex];
         }
     }
     return distance;
 }
 
-// Heurística Combinada HH
+// Heurística combinada HH
 int hybridHeuristic(const vector<int>& state, const vector<int>& goal) {
     int md = manhattanDistance(state, goal);
     int lc = linearConflict(state, goal);
@@ -138,12 +146,11 @@ int hybridHeuristic(const vector<int>& state, const vector<int>& goal) {
     return (md / 3) + lc + wd;
 }
 
-// IDA* con HH
 float idaSearch(vector<vector<int>>& path, unordered_set<string>& visited, float g, const vector<int>& current, const vector<int>& goal, float threshold, int& statesGenerated) {
     float f = g + hybridHeuristic(current, goal);
     if (f > threshold) return f;
     if (current == goal) return -1;
-
+    
     float min = numeric_limits<float>::infinity();
     // Expandir nodos (generar movimientos posibles)
     vector<vector<int>> neighbors = getNeighbors(current);
@@ -163,6 +170,7 @@ float idaSearch(vector<vector<int>>& path, unordered_set<string>& visited, float
     return min;
 }
 
+// IDA* con HH
 vector<vector<int>> idaStar(const vector<int>& start, const vector<int>& goal, int& statesGenerated) {
     vector<vector<int>> path;
     unordered_set<string> visited;
@@ -212,8 +220,9 @@ bool isSolvable(const vector<int>& state) {
     return (inversions + blankRow) % 2 == 0;
 }
 
-// Función principal
+// Función principal de ejemplo
 int main() {
+    precomputeDistances();
     string input;
     getline(cin, input); // Leer la entrada estándar
     vector<int> start = parseInput(input);
