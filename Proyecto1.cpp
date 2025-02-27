@@ -241,7 +241,7 @@ int main() {
             cout << state[i] << " ";
             if ((i + 1) % 4 == 0) cout << endl;
         }
-        cout << endl; // Separar los tableros con un salto de línea
+        cout << endl; 
     }
     cout << "Longitud del camino: " << path.size() - 1 << endl;
     cout << "Número de estados generados: " << statesGenerated << endl;
