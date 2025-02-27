@@ -223,6 +223,7 @@ bool isSolvable(const vector<int>& state) {
 // Función principal de ejemplo
 int main() {
     precomputeDistances();
+    cout << "Ingrese el tablero inicial en la forma: a b c d e f g h i j k l m n o p" << endl;
     string input;
     getline(cin, input); // Leer la entrada estándar
     vector<int> start = parseInput(input);
@@ -241,7 +242,7 @@ int main() {
             cout << state[i] << " ";
             if ((i + 1) % 4 == 0) cout << endl;
         }
-        cout << endl; 
+        cout << endl; // Separar los tableros con un salto de línea
     }
     cout << "Longitud del camino: " << path.size() - 1 << endl;
     cout << "Número de estados generados: " << statesGenerated << endl;
