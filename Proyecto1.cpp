@@ -212,7 +212,7 @@ bool isSolvable(const vector<int>& state) {
     return (inversions + blankRow) % 2 == 0;
 }
 
-// Función principal de ejemplo
+// Función principal
 int main() {
     string input;
     getline(cin, input); // Leer la entrada estándar
