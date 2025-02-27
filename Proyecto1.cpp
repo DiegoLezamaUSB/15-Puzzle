@@ -120,7 +120,6 @@ int countLinearConflicts(const vector<int>& stateLine, const vector<int>& goalLi
 // Heurística Walking Distance
 int walkingDistance(const vector<int>& state, const vector<int>& goal) {
     int distance = 0;
-    // Suponemos que es similar a la distancia Manhattan para este ejemplo
     for (int i = 0; i < 16; ++i) {
         if (state[i] != 0) {
             auto [goalRow, goalCol] = getPosition(goal, state[i]);
@@ -232,7 +231,7 @@ int main() {
             cout << state[i] << " ";
             if ((i + 1) % 4 == 0) cout << endl;
         }
-        cout << endl; // Separar los tableros con un salto de línea
+        cout << endl; 
     }
     cout << "Longitud del camino: " << path.size() - 1 << endl;
     cout << "Número de estados generados: " << statesGenerated << endl;
